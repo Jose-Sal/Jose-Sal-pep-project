@@ -3,21 +3,31 @@ package Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import DAO.AccountDAO;
+import Model.Account;
+import Service.AccountService;
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
  * found in readme.md as well as the test cases. You should
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
 public class SocialMediaController {
+    AccountService accountService;
+
+
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
     public Javalin startAPI() {
-        Javalin app = Javalin.create();
+        Javalin app = Javalin.create().start(8080);
         app.get("example-endpoint", this::exampleHandler);
 
+        //create POST endpoint for creating a new account
+        app.post("/register", this::registerHandler);
         return app;
     }
 
@@ -29,5 +39,14 @@ public class SocialMediaController {
         context.json("sample text");
     }
 
+    //for registering account
+    private void registerHandler(Context ctx) throws Exception{
+        ObjectMapper mapper = new ObjectMapper();
+        // here change AccountDAO to Account after creating the account service class
+        
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account addAccount = accountService.registerAccount(account);
+        ctx.result("this is the endpoint!");
 
+    }
 }
