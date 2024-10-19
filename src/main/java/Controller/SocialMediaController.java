@@ -28,6 +28,8 @@ public class SocialMediaController {
 
         //create POST endpoint for creating a new account
         app.post("/register", this::registerHandler);
+        //create POST endpoint for UserLogin
+        app.post("/login", this::userLogin);
         return app;
     }
 
@@ -42,11 +44,23 @@ public class SocialMediaController {
     //for registering account
     private void registerHandler(Context ctx) throws Exception{
         ObjectMapper mapper = new ObjectMapper();
-        // here change AccountDAO to Account after creating the account service class
-        
+        //convert json object of the post request into Account object
         Account account = mapper.readValue(ctx.body(), Account.class);
         Account addAccount = accountService.registerAccount(account);
         ctx.result("this is the endpoint!");
-
+        //conditions for http response 
+        if(addAccount.getUsername()==null || addAccount.getUsername().trim().isEmpty()){
+            ctx.status(400).result("Username cannot be blank");
+        } 
+        else if (addAccount.getPassword() == null ||addAccount.getPassword().length() <= 4) {
+            ctx.status(400).result("Passwrod must be over 4 characters long");
+        }
+        // else if();
+    }
+    //userlogin
+    private void userLogin(Context ctx) throws Exception{
+        ObjectMapper mapper = new ObjectMapper();
+        //convert json object of the post request into Account object
+        Account account = mapper.readValue(ctx.body(), Account.class);
     }
 }

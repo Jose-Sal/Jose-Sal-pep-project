@@ -45,4 +45,24 @@ public class AccountDAO {
         }
         return null;
     }
+
+    //for logging in the user using the username and password
+    public Account userLogin(String username, String password) throws Exception{
+        Connection connection = ConnectionUtil.getConnection();
+        //for now we will return the account information using select all where the username matches along with the password
+        String sql = "select * from account where username = ? and password = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        //enter the user prepared input
+        preparedStatement.setString(1,username);
+        preparedStatement.setString(2, password);
+        //execute 
+        ResultSet rs = preparedStatement.executeQuery();
+        while(rs.next()){
+            Account account = new Account(rs.getInt("account_id"),
+            rs.getString(username),
+            rs.getString(password));
+            return account;
+        }
+        return null;
+    }
 }
