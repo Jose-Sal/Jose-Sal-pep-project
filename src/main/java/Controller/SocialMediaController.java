@@ -14,16 +14,17 @@ import Service.AccountService;
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
 public class SocialMediaController {
-    AccountService accountService;
 
+    AccountService accountService = new AccountService();
 
+    public SocialMediaController(){}
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
     public Javalin startAPI() {
-        Javalin app = Javalin.create().start(8080);
+        Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
 
         //create POST endpoint for creating a new account
@@ -47,13 +48,17 @@ public class SocialMediaController {
         //convert json object of the post request into Account object
         Account account = mapper.readValue(ctx.body(), Account.class);
         Account addAccount = accountService.registerAccount(account);
-        ctx.result("this is the endpoint!");
+        // ctx.result("this is the endpoint!");
         //conditions for http response 
         if(addAccount.getUsername()==null || addAccount.getUsername().trim().isEmpty()){
-            ctx.status(400).result("Username cannot be blank");
+            ctx.status(400);
+            
         } 
         else if (addAccount.getPassword() == null ||addAccount.getPassword().length() <= 4) {
-            ctx.status(400).result("Passwrod must be over 4 characters long");
+            ctx.status(400);
+        }
+        else{
+            ctx.json(addAccount);
         }
         // else if();
     }

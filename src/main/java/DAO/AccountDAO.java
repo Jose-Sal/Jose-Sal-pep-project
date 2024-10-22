@@ -29,7 +29,7 @@ public class AccountDAO {
         //create connection to the database
         Connection connection =ConnectionUtil.getConnection();
         // sql statement
-        String sql = "insert into account(username, pasword) values(?,?)";
+        String sql = "insert into account(username, password) values(?,?)";
         //create a prepared statement in order to insert data into our data table
         PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         //write a prepared statment sets 
