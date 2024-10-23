@@ -57,6 +57,7 @@ public class SocialMediaController {
         else if (addAccount.getPassword() == null ||addAccount.getPassword().length() <= 4) {
             ctx.status(400);
         }
+        // else if(accountService.getAllAccounts().contains)
         else{
             ctx.json(addAccount);
         }
