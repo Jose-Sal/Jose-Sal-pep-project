@@ -18,4 +18,12 @@ public class AccountService {
     public Account registerAccount(Account account) throws Exception{
         return accountDAO.insertAccount(account);
     }
+    public List<Account> AllAccount() throws Exception{
+        List<Account> accountList = accountDAO.getAllAccounts();
+        return accountList;
+    }
+    //loging in to account 
+    public Account logIn(Account account)throws Exception{
+        return accountDAO.userLogin(account.getUsername(), account.getPassword());
+    }
 }

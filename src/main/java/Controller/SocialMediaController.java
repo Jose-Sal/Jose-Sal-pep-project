@@ -57,16 +57,20 @@ public class SocialMediaController {
         else if (addAccount.getPassword() == null ||addAccount.getPassword().length() <= 4) {
             ctx.status(400);
         }
-        // else if(accountService.getAllAccounts().contains)
+        // else if(accountService..AllAccount().contains(addAccount)){
+        //     ctx.status(400);
+        // }
         else{
             ctx.json(addAccount);
         }
-        // else if();
+        
     }
     //userlogin
     private void userLogin(Context ctx) throws Exception{
         ObjectMapper mapper = new ObjectMapper();
         //convert json object of the post request into Account object
         Account account = mapper.readValue(ctx.body(), Account.class);
+        Account loginAccount = accountService.logIn(account);
+        ctx.json(loginAccount);
     }
 }
