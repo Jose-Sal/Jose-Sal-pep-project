@@ -40,6 +40,8 @@ public class SocialMediaController {
         app.post("/messages", this::createNewMessage);
         //GetEndpoints
         app.get("/messages", this::getAllMessages);
+        //Get from message iD
+        app.get("/messages/{message_id}", null);
         return app;
     }
 
@@ -91,7 +93,7 @@ public class SocialMediaController {
         ctx.json(createMessage);
     }
 
-    private void getAllMessages(Context ctx){
+    private void getAllMessages(Context ctx) throws Exception{
         List<Message> messages = messageService.getAllMessages();
         ctx.json(messages);
     }

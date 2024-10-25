@@ -16,8 +16,12 @@ public class MessageService {
     public Message creatMessage(Message message) throws Exception{
         return messageDAO.creatMessage(message);
     }
-
+    //get all messages
     public List<Message> getAllMessages() throws Exception{
         return messageDAO.getAllMessages();
+    }
+    //get message by id
+    public Message findMessageById(Message message) throws Exception{
+        return messageDAO.getMessageByID(message.message_id);
     }
 }
