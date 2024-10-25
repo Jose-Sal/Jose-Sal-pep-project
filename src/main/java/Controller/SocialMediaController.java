@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DAO.AccountDAO;
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
  * found in readme.md as well as the test cases. You should
@@ -16,6 +18,7 @@ import Service.AccountService;
 public class SocialMediaController {
 
     AccountService accountService = new AccountService();
+    MessageService messageService = new MessageService();
 
     public SocialMediaController(){}
     /**
@@ -31,6 +34,8 @@ public class SocialMediaController {
         app.post("/register", this::registerHandler);
         //create POST endpoint for UserLogin
         app.post("/login", this::userLogin);
+        //endpoint post for messages
+        app.post("/messages", this::createNewMessage);
         return app;
     }
 
@@ -72,5 +77,13 @@ public class SocialMediaController {
         Account account = mapper.readValue(ctx.body(), Account.class);
         Account loginAccount = accountService.logIn(account);
         ctx.json(loginAccount);
+    }
+
+    //creating a new message
+    private void createNewMessage(Context ctx) throws Exception{
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message createMessage = messageService.creatMessage(message);
+        ctx.json(createMessage);
     }
 }

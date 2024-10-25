@@ -3,7 +3,7 @@ import Util.ConnectionUtil;
 import java.sql.*;
 import java.util.*;
 
-import com.azul.crs.client.Result;
+// import com.azul.crs.client.Result;
 
 import Model.Message;
 public class MessageDAO {
@@ -12,17 +12,21 @@ public class MessageDAO {
     public Message creatMessage(Message message) throws Exception{
         Connection connection = ConnectionUtil.getConnection();
         //write our sql statement for inserting a new message in our table
-        String str = "insert into message(message_id, posted_by, message_text, time_posted_epoch)";
-        PreparedStatement preparedStatement = connection.prepareStatement(str);
+        String str = "insert into message(posted_by, message_text, time_posted_epoch) values(?,?,?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(str, Statement.RETURN_GENERATED_KEYS);
 
         //prepared statement sets
-        preparedStatement.setInt(1,message.getMessage_id());
-        preparedStatement.setInt(2,message.getPosted_by());
-        preparedStatement.setString(3, message.getMessage_text());
-        preparedStatement.setLong(4, message.getTime_posted_epoch());
+        // preparedStatement.setInt(1,message.getMessage_id());
+        preparedStatement.setInt(1,message.getPosted_by());
+        preparedStatement.setString(2, message.getMessage_text());
+        preparedStatement.setLong(3, message.getTime_posted_epoch());
         preparedStatement.executeUpdate();
-        
-        return message;
+        ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
+        if(pkeyResultSet.next()){
+            int generatedMessageID = (int) pkeyResultSet.getLong(1);
+            return new Message(generatedMessageID, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
+        }
+        return null;
     }
 
     //retrieving all messages
