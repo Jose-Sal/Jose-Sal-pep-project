@@ -41,7 +41,7 @@ public class SocialMediaController {
         //GetEndpoints
         app.get("/messages", this::getAllMessages);
         //Get from message iD
-        app.get("/messages/{message_id}", null);
+        app.get("/messages/{message_id}", this::GetMessageById);
         return app;
     }
 
@@ -96,5 +96,16 @@ public class SocialMediaController {
     private void getAllMessages(Context ctx) throws Exception{
         List<Message> messages = messageService.getAllMessages();
         ctx.json(messages);
+    }
+
+    private void GetMessageById(Context ctx)throws Exception{
+        int id = Integer.parseInt(ctx.pathParam("message_id"));
+        // ObjectMapper mapper = new ObjectMapper();
+        // Message message = mapper.readValue(ctx.body(), Message.class);
+        Message getmessage = messageService.findMessageById(id);
+        if(getmessage != null){
+        ctx.json(getmessage);
+        }
+        else{ctx.status(200);}
     }
 }

@@ -21,7 +21,7 @@ public class MessageService {
         return messageDAO.getAllMessages();
     }
     //get message by id
-    public Message findMessageById(Message message) throws Exception{
-        return messageDAO.getMessageByID(message.message_id);
+    public Message findMessageById(int id) throws Exception{
+        return messageDAO.getMessageByID(id);
     }
 }
