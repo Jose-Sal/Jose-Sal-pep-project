@@ -3,6 +3,8 @@ package Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DAO.AccountDAO;
@@ -36,6 +38,8 @@ public class SocialMediaController {
         app.post("/login", this::userLogin);
         //endpoint post for messages
         app.post("/messages", this::createNewMessage);
+        //GetEndpoints
+        app.get("/messages", this::getAllMessages);
         return app;
     }
 
@@ -85,5 +89,10 @@ public class SocialMediaController {
         Message message = mapper.readValue(ctx.body(), Message.class);
         Message createMessage = messageService.creatMessage(message);
         ctx.json(createMessage);
+    }
+
+    private void getAllMessages(Context ctx){
+        List<Message> messages = messageService.getAllMessages();
+        ctx.json(messages);
     }
 }
