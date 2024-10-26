@@ -42,6 +42,8 @@ public class SocialMediaController {
         app.get("/messages", this::getAllMessages);
         //Get from message iD
         app.get("/messages/{message_id}", this::GetMessageById);
+        //delete message from id
+        app.delete("localhost:8080/messages/{message_id}", this::deleteMessage);
         return app;
     }
 
@@ -107,5 +109,16 @@ public class SocialMediaController {
         ctx.json(getmessage);
         }
         else{ctx.status(200);}
+    }
+    //delete message with id
+    private void deleteMessage(Context ctx) throws Exception{
+        int id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message messageToDelete  = messageService.findMessageById(id);
+        if(messageToDelete != null){
+            messageService.deleteMessage(id);
+            ctx.json(200);
+        }else{
+            ctx.status(200).result("");
+        }
     }
 }

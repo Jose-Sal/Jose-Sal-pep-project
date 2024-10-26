@@ -24,4 +24,8 @@ public class MessageService {
     public Message findMessageById(int id) throws Exception{
         return messageDAO.getMessageByID(id);
     }
+    //delete message by id
+    public void deleteMessage(int id)throws Exception{
+        messageDAO.deleteMessage(id);
+    }
 }
