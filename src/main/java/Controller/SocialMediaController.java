@@ -43,7 +43,7 @@ public class SocialMediaController {
         //Get from message iD
         app.get("/messages/{message_id}", this::GetMessageById);
         //delete message from id
-        app.delete("localhost:8080/messages/{message_id}", this::deleteMessage);
+        app.delete("/messages/{message_id}", this::deleteMessage);
         return app;
     }
 
@@ -116,9 +116,9 @@ public class SocialMediaController {
         Message messageToDelete  = messageService.findMessageById(id);
         if(messageToDelete != null){
             messageService.deleteMessage(id);
-            ctx.json(200);
+            ctx.json(messageToDelete);
         }else{
-            ctx.status(200).result("");
+            ctx.status(200);
         }
     }
 }
