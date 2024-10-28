@@ -28,4 +28,8 @@ public class MessageService {
     public void deleteMessage(int id)throws Exception{
         messageDAO.deleteMessage(id);
     }
+    //update message by ID
+    public Message updateMessage(String message, int id)throws Exception{
+        return messageDAO.updateMessage(message, id);
+    }
 }
