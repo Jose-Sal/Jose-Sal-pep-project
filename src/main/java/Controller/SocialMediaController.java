@@ -128,8 +128,20 @@ public class SocialMediaController {
         int id = Integer.parseInt(ctx.pathParam("message_id"));
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
-        Message updateMessage = messageService.updateMessage(message.message_text, id);
-        ctx.json(updateMessage);
+        Message isMessageFound = messageService.findMessageById(id);
+        if(message.getMessage_text().isEmpty()){
+            ctx.status(400);
+        }
+        else if(isMessageFound == null){
+            ctx.status(400);
+        }
+        else if(message.getMessage_text().length() > 255){
+            ctx.status(400);
+        }
+        else{
+            Message updateMessage = messageService.updateMessage(message.message_text, id);
+            ctx.json(updateMessage);
+        }
     }
 
     //get all messages from user ID
