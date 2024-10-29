@@ -44,7 +44,8 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::GetMessageById);
         //delete message from id
         app.delete("/messages/{message_id}", this::deleteMessage);
-        app.patch("/messages/{message_id}", null);
+        app.patch("/messages/{message_id}", this::updateMessage);
+        app.get("/accounts/{account_id}/messages", this::getAllFromUser);
         return app;
     }
 
@@ -125,6 +126,16 @@ public class SocialMediaController {
     //update message with id
     private void updateMessage(Context ctx)throws Exception{
         int id = Integer.parseInt(ctx.pathParam("message_id"));
-        
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message updateMessage = messageService.updateMessage(message.message_text, id);
+        ctx.json(updateMessage);
+    }
+
+    //get all messages from user ID
+    private void getAllFromUser(Context ctx)throws Exception{
+        int userID = Integer.parseInt(ctx.pathParam("account_id"));
+        List<Message> messages = messageService.getallFromUserID(userID);
+        ctx.json(messages);
     }
 }

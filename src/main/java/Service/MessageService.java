@@ -32,4 +32,8 @@ public class MessageService {
     public Message updateMessage(String message, int id)throws Exception{
         return messageDAO.updateMessage(message, id);
     }
+    //get all message with user id
+    public List<Message> getallFromUserID(int id)throws Exception{
+        return messageDAO.getAllFromUser(id);
+    }
 }
