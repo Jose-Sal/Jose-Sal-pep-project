@@ -129,13 +129,7 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
         Message isMessageFound = messageService.findMessageById(id);
-        if(message.getMessage_text().isEmpty()){
-            ctx.status(400);
-        }
-        else if(isMessageFound == null){
-            ctx.status(400);
-        }
-        else if(message.getMessage_text().length() > 255){
+        if(message.getMessage_text().isEmpty() || isMessageFound == null || message.getMessage_text().length() > 255){
             ctx.status(400);
         }
         else{
