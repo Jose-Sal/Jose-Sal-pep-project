@@ -3,6 +3,7 @@ import Util.ConnectionUtil;
 import java.sql.*;
 import java.util.*;
 import Model.Account;
+import Model.Message;
 public class AccountDAO {
 
     //when retreiving accounts
@@ -19,6 +20,20 @@ public class AccountDAO {
             accounts.add(account);
         }        
         return accounts;
+    }
+    //get user by ID
+    public Account getUserId(int id) throws Exception{
+        Connection connection = ConnectionUtil.getConnection();
+        //sql
+        String sql = "select * from account where account_id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+        while(rs.next()){
+            Account user = new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password") );
+            return user;
+        }
+        return null;
     }
 
     //When posting a new Account

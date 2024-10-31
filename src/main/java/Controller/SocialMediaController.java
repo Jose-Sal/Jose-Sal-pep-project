@@ -72,6 +72,9 @@ public class SocialMediaController {
         else if (addAccount.getPassword() == null ||addAccount.getPassword().length() <= 4) {
             ctx.status(400);
         }
+        else if(accountService.AllAccount().contains(addAccount.getUsername())){
+            ctx.status(400);
+        }
         // else if(accountService..AllAccount().contains(addAccount)){
         //     ctx.status(400);
         // }
@@ -85,8 +88,16 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         //convert json object of the post request into Account object
         Account account = mapper.readValue(ctx.body(), Account.class);
+        
         Account loginAccount = accountService.logIn(account);
+        //conditions
+        if(loginAccount.getPassword() == null || loginAccount.getUsername() == null){
+            ctx.status(401);
+        }
+        else{
         ctx.json(loginAccount);
+        }
+        
     }
 
     //creating a new message
@@ -94,7 +105,15 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
         Message createMessage = messageService.creatMessage(message);
-        ctx.json(createMessage);
+        if(accountService.findUserById(message.getPosted_by()) == null){
+            ctx.status(400);
+        }
+        if(message.getMessage_text().isEmpty() || message.getMessage_text().length() > 255){
+            ctx.status(400);
+        }
+        else{
+            ctx.json(createMessage);
+        }
     }
 
     private void getAllMessages(Context ctx) throws Exception{

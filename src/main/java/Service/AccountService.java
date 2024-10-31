@@ -1,6 +1,8 @@
 package Service;
 import DAO.AccountDAO;
 import Model.Account;
+import Model.Message;
+
 import java.util.List;
 public class AccountService {
     private AccountDAO accountDAO;
@@ -21,6 +23,10 @@ public class AccountService {
     public List<Account> AllAccount() throws Exception{
         List<Account> accountList = accountDAO.getAllAccounts();
         return accountList;
+    }
+    //user by id
+    public Account findUserById(int id) throws Exception{
+        return accountDAO.getUserId(id);
     }
     //loging in to account 
     public Account logIn(Account account)throws Exception{
