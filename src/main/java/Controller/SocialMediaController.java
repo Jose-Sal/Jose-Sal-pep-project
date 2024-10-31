@@ -67,20 +67,27 @@ public class SocialMediaController {
         //conditions for http response 
         if(addAccount.getUsername()==null || addAccount.getUsername().trim().isEmpty()){
             ctx.status(400);
-            
+            return;
         } 
         else if (addAccount.getPassword() == null ||addAccount.getPassword().length() <= 4) {
             ctx.status(400);
+            return;
         }
-        else if(accountService.AllAccount().contains(addAccount.getUsername())){
-            ctx.status(400);
-        }
+        // else if(accountService.UsernameExist(addAccount.getUsername())){
+        //     ctx.status(400);
+        //     return;
+        // }
         // else if(accountService..AllAccount().contains(addAccount)){
         //     ctx.status(400);
         // }
         else{
-            ctx.json(addAccount);
+            while(accountService.UsernameExist(addAccount.getUsername().trim())){
+                ctx.json(addAccount);
+                return;
+            }
+            
         }
+        ctx.status(400);
         
     }
     //userlogin
@@ -91,7 +98,7 @@ public class SocialMediaController {
         
         Account loginAccount = accountService.logIn(account);
         //conditions
-        if(loginAccount.getPassword() == null || loginAccount.getUsername() == null){
+        if(loginAccount==null){
             ctx.status(401);
         }
         else{

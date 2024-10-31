@@ -22,6 +22,21 @@ public class AccountDAO {
         return accounts;
     }
     //get user by ID
+    public Boolean doesUsernameExist(String username){
+        //sql
+        String sql = "select COUNT(*) from account where username=?";
+        try (Connection connection = ConnectionUtil.getConnection();PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            rs.next();
+            return rs.getInt(1) >0;
+        } catch (Exception e) {
+            // TODO: handle exception
+            return false;
+        }
+        
+    }
+    //get user by ID
     public Account getUserId(int id) throws Exception{
         Connection connection = ConnectionUtil.getConnection();
         //sql
@@ -40,23 +55,25 @@ public class AccountDAO {
     //this will be considered user registration 
     // create insert for the account table
     //insert method will have a parameter with a account object
-    public Account insertAccount(Account account) throws Exception{
-        //create connection to the database
-        Connection connection =ConnectionUtil.getConnection();
+    public Account insertAccount(Account account){
         // sql statement
         String sql = "insert into account(username, password) values(?,?)";
+        //create connection to the database
         //create a prepared statement in order to insert data into our data table
-        PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        //write a prepared statment sets 
-        preparedStatement.setString(1, account.getUsername());
-        preparedStatement.setString(2, account.getPassword());
-        //execute the prepared statement
-        preparedStatement.executeUpdate();
-
-        ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
-        if(pkeyResultSet.next()){
-            int generatedAccountID = (int) pkeyResultSet.getLong(1);
-            return new Account(generatedAccountID, account.getUsername(),account.getPassword());
+        try (Connection connection =ConnectionUtil.getConnection();PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+            //write a prepared statment sets 
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+            //execute the prepared statement
+            preparedStatement.executeUpdate();
+            ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
+            if(pkeyResultSet.next()){
+                int generatedAccountID = (int) pkeyResultSet.getLong(1);
+                return new Account(generatedAccountID, account.getUsername(),account.getPassword());
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            return null;
         }
         return null;
     }
@@ -77,7 +94,9 @@ public class AccountDAO {
             rs.getInt("account_id"),
             rs.getString("username"),
             rs.getString("password"));
-            return accountAcc;
+            if(Objects.equals(password, accountAcc.getPassword())){
+                return accountAcc;
+            }
         }
         return null;
     }

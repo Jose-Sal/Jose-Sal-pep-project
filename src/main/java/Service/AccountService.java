@@ -28,6 +28,9 @@ public class AccountService {
     public Account findUserById(int id) throws Exception{
         return accountDAO.getUserId(id);
     }
+    public boolean UsernameExist(String str)throws Exception{
+        return accountDAO.doesUsernameExist(str);
+    }
     //loging in to account 
     public Account logIn(Account account)throws Exception{
         return accountDAO.userLogin(account.getUsername(), account.getPassword());
