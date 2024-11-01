@@ -28,7 +28,9 @@ public class AccountDAO {
     public Boolean doesUsernameExist(String username){
         //sql
         String sql = "select COUNT(*) from account where username=?";
-        try (Connection connection = ConnectionUtil.getConnection();PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+        try {
+            Connection connection = ConnectionUtil.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
             rs.next();
@@ -75,9 +77,15 @@ public class AccountDAO {
     public Account insertAccount(Account account){
         // sql statement
         String sql = "insert into account(username, password) values(?,?)";
+        //check if the username is already in the datatable
+        
         //create connection to the database
         //create a prepared statement in order to insert data into our data table
-        try (Connection connection =ConnectionUtil.getConnection();PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+        if(doesUsernameExist(account.getUsername().trim()) ==true){
+            return null;
+        }
+        try {
+            Connection connection =ConnectionUtil.getConnection();PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             //write a prepared statment sets 
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword());

@@ -58,36 +58,33 @@ public class SocialMediaController {
     }
 
     //for registering account
-    private void registerHandler(Context ctx) throws Exception{
+    private void registerHandler(Context ctx){
         ObjectMapper mapper = new ObjectMapper();
-        //convert json object of the post request into Account object
-        Account account = mapper.readValue(ctx.body(), Account.class);
-        Account addAccount = accountService.registerAccount(account);
-        // ctx.result("this is the endpoint!");
-        //conditions for http response 
-        if(addAccount.getUsername()==null || addAccount.getUsername().trim().isEmpty()){
-            ctx.status(400);
-            return;
-        } 
-        else if (addAccount.getPassword() == null ||addAccount.getPassword().length() <= 4) {
-            ctx.status(400);
-            return;
-        }
-        // else if(accountService.UsernameExist(addAccount.getUsername())){
-        //     ctx.status(400);
-        //     return;
-        // }
-        // else if(accountService..AllAccount().contains(addAccount)){
-        //     ctx.status(400);
-        // }
-        else{
-            while(accountService.UsernameExist(addAccount.getUsername().trim())){
-                ctx.json(addAccount);
+        try {
+             //convert json object of the post request into Account object
+            Account account = mapper.readValue(ctx.body(), Account.class);
+            Account addAccount = accountService.registerAccount(account);
+            //conditions for http response 
+            if(addAccount.getUsername()==null || addAccount.getUsername().trim().isEmpty()){
+                ctx.status(400);
+                return;
+            } 
+            else if (addAccount.getPassword() == null ||addAccount.getPassword().length() <= 4) {
+                ctx.status(400);
                 return;
             }
-            
+            else{
+                while(accountService.UsernameExist(addAccount.getUsername().trim())){
+                    ctx.json(addAccount);
+                    return;
+                }
+                
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            ctx.status(400);
         }
-        ctx.status(400);
+       
         
     }
     //userlogin
@@ -108,21 +105,26 @@ public class SocialMediaController {
     }
 
     //creating a new message
-    private void createNewMessage(Context ctx) throws Exception{
+    private void createNewMessage(Context ctx){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Message message = mapper.readValue(ctx.body(), Message.class);
+            if(!accountService.AllAccount().contains(accountService.findUserById(message.posted_by))){
+                ctx.status(400);
+            }
+            Message createMessage = messageService.creatMessage(message);
+            // Boolean doesAccountExist = accountService.doesuserExistById(message.getPosted_by());
+            if(message.getMessage_text().isEmpty() || createMessage == null){
+                ctx.status(400);
+            }
+            else{
+                ctx.json(createMessage);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            ctx.status(400);
+        }
         
-        ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(ctx.body(), Message.class);
-        if(!accountService.AllAccount().contains(accountService.findUserById(message.posted_by))){
-            ctx.status(400);
-        }
-        Message createMessage = messageService.creatMessage(message);
-        // Boolean doesAccountExist = accountService.doesuserExistById(message.getPosted_by());
-        if(message.getMessage_text().isEmpty() || createMessage == null){
-            ctx.status(400);
-        }
-        else{
-            ctx.json(createMessage);
-        }
     }
 
     private void getAllMessages(Context ctx) throws Exception{
