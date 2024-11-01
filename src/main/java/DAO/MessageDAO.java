@@ -14,9 +14,12 @@ public class MessageDAO {
         //write our sql statement for inserting a new message in our table
         String str = "insert into message(posted_by, message_text, time_posted_epoch) values(?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(str, Statement.RETURN_GENERATED_KEYS);
-
+        
         //prepared statement sets
         // preparedStatement.setInt(1,message.getMessage_id());
+        if(message.getMessage_text().length()>255){
+            return null;
+        }
         preparedStatement.setInt(1,message.getPosted_by());
         preparedStatement.setString(2, message.getMessage_text());
         preparedStatement.setLong(3, message.getTime_posted_epoch());

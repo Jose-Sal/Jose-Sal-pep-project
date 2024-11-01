@@ -112,10 +112,11 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
         Message createMessage = messageService.creatMessage(message);
-        if(accountService.findUserById(message.getPosted_by()) == null){
-            ctx.status(400);
-        }
-        if(message.getMessage_text().isEmpty() || message.getMessage_text().length() > 255){
+        Account doesAccountExist = accountService.findUserById(message.getPosted_by());
+        // if(accountService.findUserById(message.getPosted_by()) == null){
+        //     ctx.status(400);
+        // }
+        if(message.getMessage_text().isEmpty() || createMessage == null || doesAccountExist==null){
             ctx.status(400);
         }
         else{
