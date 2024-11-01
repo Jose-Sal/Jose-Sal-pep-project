@@ -109,14 +109,15 @@ public class SocialMediaController {
 
     //creating a new message
     private void createNewMessage(Context ctx) throws Exception{
+        
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
+        if(!accountService.AllAccount().contains(accountService.findUserById(message.posted_by))){
+            ctx.status(400);
+        }
         Message createMessage = messageService.creatMessage(message);
-        Account doesAccountExist = accountService.findUserById(message.getPosted_by());
-        // if(accountService.findUserById(message.getPosted_by()) == null){
-        //     ctx.status(400);
-        // }
-        if(message.getMessage_text().isEmpty() || createMessage == null || doesAccountExist==null){
+        // Boolean doesAccountExist = accountService.doesuserExistById(message.getPosted_by());
+        if(message.getMessage_text().isEmpty() || createMessage == null){
             ctx.status(400);
         }
         else{

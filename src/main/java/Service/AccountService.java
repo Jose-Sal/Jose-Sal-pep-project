@@ -31,6 +31,9 @@ public class AccountService {
     public boolean UsernameExist(String str)throws Exception{
         return accountDAO.doesUsernameExist(str);
     }
+    public boolean doesuserExistById(int id)throws Exception{
+        return accountDAO.doesUserExist(id);
+    }
     //loging in to account 
     public Account logIn(Account account)throws Exception{
         return accountDAO.userLogin(account.getUsername(), account.getPassword());

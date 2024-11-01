@@ -12,9 +12,8 @@ public class MessageDAO {
     public Message creatMessage(Message message) throws Exception{
         Connection connection = ConnectionUtil.getConnection();
         //write our sql statement for inserting a new message in our table
-        String str = "insert into message(posted_by, message_text, time_posted_epoch) values(?,?,?)";
+        String str = "insert into message (posted_by, message_text, time_posted_epoch) values(?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(str, Statement.RETURN_GENERATED_KEYS);
-        
         //prepared statement sets
         // preparedStatement.setInt(1,message.getMessage_id());
         if(message.getMessage_text().length()>255){

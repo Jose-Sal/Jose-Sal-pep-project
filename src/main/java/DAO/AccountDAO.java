@@ -2,6 +2,9 @@ package DAO;
 import Util.ConnectionUtil;
 import java.sql.*;
 import java.util.*;
+
+import org.h2.engine.Database;
+
 import Model.Account;
 import Model.Message;
 public class AccountDAO {
@@ -21,7 +24,7 @@ public class AccountDAO {
         }        
         return accounts;
     }
-    //get user by ID
+    //get user by username
     public Boolean doesUsernameExist(String username){
         //sql
         String sql = "select COUNT(*) from account where username=?";
@@ -49,6 +52,20 @@ public class AccountDAO {
             return user;
         }
         return null;
+    }
+    //does user exist but instead output should be bool
+    public static Boolean doesUserExist(int id) throws Exception{
+        try (Connection connection = ConnectionUtil.getConnection()) {
+            String sql = "SELECT COUNT(*) FROM account where account_id=?";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setInt(1, id);
+                ResultSet rs = pstmt.executeQuery();
+                return rs.getInt(1) > 0;
+                
+            }
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     //When posting a new Account
